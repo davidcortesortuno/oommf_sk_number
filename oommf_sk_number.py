@@ -242,15 +242,8 @@ class SkNumberOOMMF(object):
                                   self.ymin * 1e9, self.ymax * 1e9]
                           )
             if cbar:
-                # box = ax.get_position()
-                # axColor = plt.axes([(box.x0 + box.width) - 0.075, box.y0, 0.02, box.height])
-                # cb = plt.colorbar(p, cax=axColor, orientation="vertical")
-                # cb.set_ticks([0, np.pi, 2 * np.pi])
-                # ticklabs = ['$0$', r'$\pi$', r'$2\pi$']
-                # cb.ax.set_yticklabels(ticklabs, ha='right', fontsize=18)
-                # cb.ax.yaxis.set_tick_params(pad=25)
-                # cb.set_label(r'$\vec{m}$', fontsize=22)
- 
+
+                # Plot a colour wheel with the HSV colours:
                 box = ax.get_position()
                 axColor = plt.axes([box.x1 + cbar_offsets[0], box.y1 + cbar_offsets[1],
                                     0.2, 0.2], projection='polar')

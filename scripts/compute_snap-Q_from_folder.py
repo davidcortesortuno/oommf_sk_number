@@ -76,13 +76,13 @@ for i, _file in enumerate(file_list):
     print('Computing Q for snap: {:06d}'.format(int(snapshot)))
 
     oommf_data = oskn.SkNumberOOMMF(os.path.join(args.path, _file))
+    Q = oommf_data.compute_sk_number()
 
     if args.plot_snaps:
         oommf_data.plot_system(savefig='pngs/{}_{:06d}'.format(sim_name, snapshot) + '.png')
     if args.plot_charge:
         oommf_data.plot_charge_density(savefig='pngs_charge/{}_charge_{:06d}'.format(sim_name, snapshot) + '.png')
 
-    Q = oommf_data.compute_sk_number()
     data[i][0] = snapshot * args.timestep
     data[i][1] = Q
 
