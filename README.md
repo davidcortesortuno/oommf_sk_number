@@ -10,7 +10,7 @@ this format directly from OOMMF using the OOMMF tools:
 
     tclsh oommf.tcl avf2ovf -grid irreg my_file.omf my_file_in_text.omf
 
-The format is not important, can `ovf`, `omf`, etc.
+The format is not important, can be `ovf`, `omf`, etc.
 
 The Python library was designed to be used in external scripts that
 can process multiple files or folders. Examples are in the `script` folder.
