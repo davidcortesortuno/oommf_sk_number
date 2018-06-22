@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1296536.svg)](https://doi.org/10.5281/zenodo.1296536)
+
+
 # OOMMF Skyrmion Number
 
 Python library for the calculation of the skyrmion number
@@ -58,3 +61,19 @@ need to be implemented/polished.
 - [ ] Calculate coordinates
 - [ ] Allow Periodic boundaries
 - [ ] Print z coordinate specified by the z-index
+
+# Citation
+
+Cite this repository as:
+
+```
+@Misc{Cortes2018,
+  author       = {David Cort{\'e}s-Ortu{\~n}o},
+  title        = {OOMMF Skyrmion Number},
+  howpublished = {Zenodo doi:10.5281/zenodo.1296536. Github: https://github.com/davidcortesortuno/oommf_sk_number},
+  year         = {2018},
+  doi          = {10.5281/zenodo.1296536},
+  url          = {https://doi.org/10.5281/zenodo.1296536},
+}
+
+```
