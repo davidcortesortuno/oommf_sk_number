@@ -124,9 +124,9 @@ class SkNumberOOMMF(object):
             setattr(self, attrs[k], num_val)
 
         # Compute number of elements in each direction
-        self.nx = int((self.xmax - self.xmin) / self.dx)
-        self.ny = int((self.ymax - self.ymin) / self.dy)
-        self.nz = int((self.zmax - self.zmin) / self.dz)
+        self.nx = int(round((self.xmax - self.xmin) / self.dx))
+        self.ny = int(round((self.ymax - self.ymin) / self.dy))
+        self.nz = int(round((self.zmax - self.zmin) / self.dz))
 
         _file.close()
 
