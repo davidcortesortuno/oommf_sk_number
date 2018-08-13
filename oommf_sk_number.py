@@ -13,12 +13,16 @@ import matplotlib.pyplot as plt
 import re
 import colorsys
 
+
 # -----------------------------------------------------------------------------
+
 
 def convert_to_RGB(hls_color):
     return np.array(colorsys.hls_to_rgb(hls_color[0] / (2 * np.pi),
                                         hls_color[1],
                                         hls_color[2]))
+
+
 def generate_RGBs(field_data):
     """
     field_data      ::  (n, 3) array
@@ -125,6 +129,38 @@ class SkNumberOOMMF(object):
         self.nz = int((self.zmax - self.zmin) / self.dz)
 
         _file.close()
+
+    def set_coordinates(self):
+        """
+        Compute the coordinates of the system using the information
+        from the header of the OMF file. Coordinates are stored in
+        1D arrays for every component (x,y,z) using the variables
+
+                self.x, self.y, self.z
+
+        Coordinates are scaled in nm units
+        The 1D arrays follow the order of the magnetisation/spin data
+        """
+        xs, ys, zs = (np.arange(float(self.nx)),
+                      np.arange(float(self.ny)),
+                      np.arange(float(self.nz))
+                      )
+        xs *= self.dx
+        xs += self.xbase
+        ys *= self.dy
+        ys += self.ybase
+        zs *= self.dz
+        zs += self.zbase
+
+        xs = np.tile(np.tile(xs, self.ny), self.nz)
+        ys = np.tile(np.repeat(ys, self.nx), self.nz)
+        zs = np.repeat(zs, self.nx * self.ny)
+
+        # self.coordinates = np.ravel(np.column_stack((xs, ys, zs))) * 1e9
+        self.coordinates = np.column_stack((xs, ys, zs)) * 1e9
+        self.x, self.y, self.z = (self.coordinates[:, 0],
+                                  self.coordinates[:, 1],
+                                  self.coordinates[:, 2])
 
     def load_system_data(self):
         mag_data = np.loadtxt(self.input_file, comments='#')
@@ -242,32 +278,40 @@ class SkNumberOOMMF(object):
                                   self.ymin * 1e9, self.ymax * 1e9]
                           )
             if cbar:
-
-                # Plot a colour wheel with the HSV colours:
                 box = ax.get_position()
-                axColor = plt.axes([box.x1 + cbar_offsets[0], box.y1 + cbar_offsets[1],
+                axColor = plt.axes([box.x1 + cbar_offsets[0],
+                                    box.y1 + cbar_offsets[1],
                                     0.2, 0.2], projection='polar')
-                azimuths = np.arange(0, 721, 1)
-                # For the y axis, we need an extra element so rgb has 1 less
+                # For the x axis, we need an extra element so rgb has 1 less
                 # element along the y direction (might change in the future)
-                zeniths = np.arange(20, 51, 1)
+                azimuths = np.arange(0, 361, 1)
+                zeniths = np.arange(20, 50, 1)
+                dz = 30
 
-                # colours have 1 less element along y
-                rgb = np.ones((30 * 720, 3))
+                # colours have 1 less element along x
+                rgb = np.ones((dz * 360, 3))
                 # Set the HLS hue value from 0 to 2 PI from the azimuth values
-                # We tile the circle 30 times: 
+                # We tile the circle 30 times:
                 #   [0 ... 2PI] -> [0...2PI 0 .. 2PI ...]
-                rgb[:, 0] = np.tile(azimuths[:-1] * np.pi / 180, 30)
-                # For every circle (361 values) we increase the Light value 
-                # from 0 to 1, i.e. from black to white, 30 times:
+                rgb[:, 0] = np.tile(azimuths[:-1] * np.pi / 180, dz)
+                # For every circle (360 values) we increase the Light value
+                # from 0 to 1, i.e. from black to white, dz times:
                 #  [0 .. 1] -> [0 0 ... 0 1 1 ... 1]
-                rgb[:, 1] = np.repeat(np.linspace(0, 1, 720), 30)
+                # This code makes a wider outer black area: ----
+                greys = np.zeros(360)
+                greys[:340] = np.linspace(1, 0, 340)
+                greys[340:] = 0
+                rgb[:, 1] = np.repeat(greys, dz)
+                # Instead of: -----
+                # rgb[:, 1] = np.repeat(np.linspace(0, 1, 360), dz)
+                # -----
                 # Now we convert every row in HLS to RGB values
                 rgb = np.apply_along_axis(convert_to_RGB, 1, rgb)
 
-                axColor.pcolormesh(azimuths * np.pi / 180.0, zeniths, 
+                # And plot in the polar axes:
+                axColor.pcolormesh(azimuths * np.pi / 180.0, zeniths,
                                    # only necessary as required n of args:
-                                   np.zeros((31, 721)),
+                                   np.zeros((dz, 360)),
                                    # cmap=plt.cm.hsv
                                    color=rgb
                                    )
@@ -275,12 +319,14 @@ class SkNumberOOMMF(object):
                 # axColor.set_xticks([0, np.pi * 0.5, np.pi, 1.5 * np.pi])
                 axColor.set_thetagrids([0, 90, 180, 270])
                 axColor.tick_params(axis='x', pad=0)
-                axColor.set_xticklabels([r'$0$', r'$\pi/2$', r'$\pi$', r'$3\pi/2$'],
+                axColor.set_xticklabels([r'$0$', r'$\pi/2$',
+                                         r'$\pi$', r'$3\pi/2$'],
                                         # fontsize=18
                                         )
-                axColor.text(0.5, 0.5, r'$\vec{m}$', 
+                axColor.text(0.5, 0.5, r'$\vec{m}$',
                              horizontalalignment='center',
-                             verticalalignment='center', transform=axColor.transAxes, 
+                             verticalalignment='center',
+                             transform=axColor.transAxes,
                              # fontsize=20
                              )
 
