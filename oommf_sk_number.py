@@ -374,7 +374,7 @@ class SkNumberOOMMF(object):
 
 
 if __name__ == '__main__':
-    _file = 'files/CoPt_J5e11_eprime_012.omf'
+    _file = 'test/isolated_sk_PdFeIr_PBC-Oxs_TimeDriver-Magnetization-0000000-0000000.omf'
     # _file = 'files/IrCo_J5e11_eprime_012.omf'
     # ngbs = generate_ngbs(h)
     # print(ngbs)
