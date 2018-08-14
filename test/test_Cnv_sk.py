@@ -64,3 +64,7 @@ def test_sk_number_vs_mesh_discretisation():
                                                  oommf_data.compute_sk_number())
               )
         oommf_data.plot_system(savefig='test_n_{:03d}.png'.format(n))
+
+
+if __name__ == '__main__':
+    test_sk_number_vs_mesh_discretisation()
