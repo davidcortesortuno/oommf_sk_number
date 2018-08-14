@@ -184,10 +184,10 @@ class SkNumberOOMMF(object):
 
         for j in range(ny):
             for i in range(nx):
-                ngbs[i + j * nx] = [self._index_2D(i, j - 1),
-                                    self._index_2D(i, j + 1),
-                                    self._index_2D(i - 1, j),
-                                    self._index_2D(i + 1, j),
+                ngbs[i + j * nx] = [self._index_2D(i - 1, j),  # -x
+                                    self._index_2D(i + 1, j),  # +x
+                                    self._index_2D(i, j - 1),  # -y
+                                    self._index_2D(i, j + 1)   # +y
                                     ]
 
         self.neighbours = ngbs
