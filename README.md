@@ -1,5 +1,12 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1296536.svg)](https://doi.org/10.5281/zenodo.1296536)
 
+# WARNING:
+
+This tool is not developed anymore and the project has been migrated to OOMMFPy:
+
+https://github.com/davidcortesortuno/oommfpy
+
+
 
 # OOMMF Skyrmion Number
 
